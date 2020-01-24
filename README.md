@@ -16,6 +16,8 @@ Watch [this video](https://drive.google.com/open?id=1kCQI2mjPkhFaHbnquiQHtq7oArD
 [Michael J. Black](https://ps.is.tuebingen.mpg.de/person/black),        
 > *ArXiv, 2019* 
 
+issues with opengl and pyrender: https://github.com/mcfletch/pyopengl/issues/27
+
 ## Features
 
 _**V**ideo **I**nference for **B**ody Pose and Shape **E**stimation_ (VIBE) is a video pose and shape estimation method.
