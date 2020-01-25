@@ -28,6 +28,9 @@ import numpy as np
 from tqdm import tqdm
 from multi_person_tracker import MPT
 from torch.utils.data import DataLoader
+import torch
+from torchvision import models
+from torchsummary import summary
 
 from lib.models.vibe import VIBE_Demo
 from lib.utils.renderer import Renderer
@@ -106,7 +109,7 @@ def main(args):
         add_linear=True,
         use_residual=True,
     ).to(device)
-
+    # print("VIBE DEMOOOOOOOOO: ", model)
     # ========= Load pretrained weights ========= #
     pretrained_file = download_ckpt(use_3dpw=False)
     ckpt = torch.load(pretrained_file)
@@ -115,6 +118,9 @@ def main(args):
     model.load_state_dict(ckpt, strict=False)
     model.eval()
     print(f'Loaded pretrained weights from \"{pretrained_file}\"')
+
+    # print("MODELLLLL: ")
+    # summary(model, (3, 2048, 2048))
 
     # ========= Run VIBE on each person ========= #
     print(f'Running VIBE on each tracklet...')
@@ -236,6 +242,23 @@ def main(args):
         }
 
         vibe_results[person_id] = output_dict
+
+
+    # batch, seqlen, nc, h, w
+    x = torch.randn(2, 1, 3, 2048, 2048, device='cuda', requires_grad=True)
+    torch_out = model(x)
+    # Export the model to onnx 
+    print("exporting ONNX model")
+    torch.onnx.export(model,               # model being run
+                x,                         # model input (or a tuple for multiple inputs)
+                "vibe.onnx",               # where to save the model (can be a file or file-like object)
+                export_params=True,        # store the trained parameter weights inside the model file
+                opset_version=10,          # the ONNX version to export the model to
+                do_constant_folding=True,  # whether to execute constant folding for optimization
+                input_names = ['input'],   # the model's input names
+                output_names = ['output'], # the model's output names
+                dynamic_axes={'input' : {0 : 'batch_size'},    # variable lenght axes
+                                'output' : {0 : 'batch_size'}})
 
     del model
 
