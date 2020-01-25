@@ -29,4 +29,8 @@ echo "Activating virtual environment"
 source $PWD/vibe-env/bin/activate
 
 $PWD/vibe-env/bin/pip install numpy torch torchvision
+
 $PWD/vibe-env/bin/pip install -r requirements.txt
+
+sudo apt install freeglut3-dev
+sudo apt-get install libav-tools
