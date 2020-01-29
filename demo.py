@@ -109,18 +109,12 @@ def main(args):
         add_linear=True,
         use_residual=True,
     ).to(device)
-    # print("VIBE DEMOOOOOOOOO: ", model)
     # ========= Load pretrained weights ========= #
     pretrained_file = download_ckpt(use_3dpw=False)
     ckpt = torch.load(pretrained_file)
-    print(f'Performance of pretrained model on 3DPW: {ckpt["performance"]}')
     ckpt = ckpt['gen_state_dict']
     model.load_state_dict(ckpt, strict=False)
     model.eval()
-    print(f'Loaded pretrained weights from \"{pretrained_file}\"')
-
-    # print("MODELLLLL: ")
-    # summary(model, (3, 2048, 2048))
 
     # ========= Run VIBE on each person ========= #
     print(f'Running VIBE on each tracklet...')
